@@ -1,10 +1,10 @@
 import React, { FC, ReactElement } from 'react';
-import { Player } from 'components/Player';
 import styled from '@emotion/styled';
 import { Sidebar } from 'components/Sidebar';
 import { renderRoutes } from 'react-router-config';
 import { loggedInRoutes } from 'routes';
 import { PlayerBar } from 'components/PlayerBar';
+import { useSpotify } from 'hooks/useSpotify';
 
 const Container = styled.div`
   display: flex;
@@ -18,15 +18,18 @@ const Content = styled.div`
   overflow: scroll;
 `;
 
-export const LoggedInContent: FC = (): ReactElement => (
-  <Container>
-    <Player />
-    <Sidebar />
+export const LoggedInContent: FC = (): ReactElement => {
+  useSpotify();
 
-    <Content>
-      {renderRoutes(loggedInRoutes)}
-    </Content>
+  return (
+    <Container>
+      <Sidebar />
 
-    <PlayerBar />
-  </Container>
-);
+      <Content>
+        {renderRoutes(loggedInRoutes)}
+      </Content>
+
+      <PlayerBar />
+    </Container>
+  );
+};

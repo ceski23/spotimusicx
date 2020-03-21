@@ -4,7 +4,6 @@ import { enterAnimation, Theme } from 'theme';
 import Color from 'color';
 import { useSelector } from 'react-redux';
 import { selectSpotifyState } from 'features/spotify/slice';
-import { useSpotify } from 'hooks/useSpotify';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface Props {
@@ -33,7 +32,6 @@ const Container = styled.div`
 
 export const PlayerBar: FC<Props> = (): ReactElement => {
   const { color } = useSelector(selectSpotifyState);
-  useSpotify();
 
   return (
     <Container color={color} />
