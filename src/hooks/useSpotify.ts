@@ -36,14 +36,16 @@ export const useSpotify = () => {
       dispatch(setDeviceId(device_id));
     };
 
-    const stateChangedListener = (currentState: State) => {
-      dispatch(setState(currentState));
-      dispatch(setTrack(currentState.track_window.current_track));
+    const stateChangedListener = (currentState?: State) => {
+      if (currentState) {
+        dispatch(setState(currentState));
+        dispatch(setTrack(currentState.track_window.current_track));
 
-      const image = currentState.track_window.current_track.album.images[0].url;
-      Vibrant.from(image).getPalette().then((palette) => {
-        dispatch(setTrackColor(palette.Vibrant?.getHex()));
-      });
+        const image = currentState.track_window.current_track.album.images[0].url;
+        Vibrant.from(image).getPalette().then((palette) => {
+          dispatch(setTrackColor(palette.Vibrant?.getHex()));
+        });
+      }
     };
 
     if (player) {
