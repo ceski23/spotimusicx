@@ -1,15 +1,19 @@
 {
   "parser": "@typescript-eslint/parser",
   "extends": [
-    "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended",
-    "prettier/@typescript-eslint"
+    "plugin:react/recommended",
+    "airbnb"
   ],
   "rules": {
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-explicit-any": "off",
-    "@typescript-eslint/ban-ts-ignore": "off"
+    "@typescript-eslint/ban-ts-ignore": "off",
+    "import/prefer-default-export": "off",
+    "import/extensions": ["warn", "never"],
+    "linebreak-style": "off",
+    "react/jsx-filename-extension": [1, { "extensions": [ ".tsx" ] }],
+    "no-unused-vars": "off"
   },
   "overrides": [
     {
@@ -22,7 +26,23 @@
   "settings": {
     "react": {
       "version": "detect"
+    },
+    "import/resolver": {
+      "node": {
+        "extensions": [
+          ".js",
+          ".jsx",
+          ".ts",
+          ".tsx"
+        ],
+        "paths": [
+          "src"
+        ]
+      }
     }
   },
-  "ignorePatterns": ["coverage/", "node_modules/", "src/serviceWorker.ts"]
+  "ignorePatterns": ["coverage/", "node_modules/", "src/serviceWorker.ts"],
+  "env": {
+    "browser": true
+  }
 }
