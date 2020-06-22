@@ -23,13 +23,13 @@ export interface ArtistsState {
 
 const initialState: ArtistsState = {
   currentArtist: {
-    loading: false,
+    loading: true,
   },
   artistTopTracks: {
-    loading: false,
+    loading: true,
   },
   artistAlbums: {
-    loading: false,
+    loading: true,
   },
 };
 

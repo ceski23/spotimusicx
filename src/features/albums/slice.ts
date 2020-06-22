@@ -12,7 +12,7 @@ export interface AlbumsState {
 }
 
 const initialState: AlbumsState = {
-  loading: false,
+  loading: true,
 };
 
 const name = 'albums';
