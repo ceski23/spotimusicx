@@ -1,15 +1,13 @@
 import React, {
-  FC, ReactElement, useRef, useEffect,
+  FC, ReactElement, useEffect,
 } from 'react';
 import styled from '@emotion/styled';
 import { PageTitle } from 'components/PageTitle';
 import { Track } from 'components/Track';
 import { RouteComponentProps } from 'react-router-dom';
 import { useThunkDispatch } from 'store';
-import { selectSavedTracks, getSavedTracks, getMoreSavedTracks } from 'features/library/slice';
 import { useSelector } from 'react-redux';
 import { slideUp } from 'theme';
-import { InfiniteList } from 'components/InfiniteList';
 import { playUris, selectRecentlyPlayed, getRecentlyPlayed } from 'features/player/slice';
 import { unwrapResult } from '@reduxjs/toolkit';
 
