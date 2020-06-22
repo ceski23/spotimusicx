@@ -1,5 +1,5 @@
 import { client } from 'api';
-import { User } from './types';
+import { User } from 'features/apiTypes';
 
 export const fetchMe = async (): Promise<User> => client
   .get('me')

@@ -12,7 +12,7 @@ export const theme = {
 
 export type Theme = typeof theme;
 
-export const enterAnimation = keyframes`
+export const slideUp = keyframes`
   from {
     transform: translateY(50px);
     opacity: 0.2;
@@ -20,6 +20,18 @@ export const enterAnimation = keyframes`
 
   to {
     transform: translateY(0);
+    opacity: 1;
+  }
+`;
+
+export const slideRight = keyframes`
+  from {
+    transform: translateX(-50px);
+    opacity: 0.2;
+  }
+
+  to {
+    transform: translateX(0);
     opacity: 1;
   }
 `;

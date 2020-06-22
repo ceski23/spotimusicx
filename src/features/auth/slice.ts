@@ -1,10 +1,12 @@
 /* eslint-disable no-param-reassign */
-import { createSlice, PayloadAction, combineReducers } from '@reduxjs/toolkit';
+import {
+  createSlice, PayloadAction, combineReducers, createSelector,
+} from '@reduxjs/toolkit';
 import { persistReducer } from 'redux-persist';
 import localforage from 'localforage';
 import { RootState } from 'store';
 import { createStatusSlice } from 'features/statusSlice';
-import { User } from './types';
+import { User } from 'features/apiTypes';
 
 export interface AuthState {
   accessToken?: string;
@@ -49,4 +51,7 @@ const reducer = combineReducers({
 export const { setAccessToken, logout, setUser } = slice.actions;
 export default reducer;
 
-export const selectAuthData = (state: RootState) => state.auth.data;
+const getAuthState = (state: RootState) => state.auth;
+export const selectAccessToken = createSelector(getAuthState, (state) => state.data.accessToken);
+export const selectUser = createSelector(getAuthState, (state) => state.data.user);
+export const selectAuthStatus = createSelector(getAuthState, (state) => state.status.loading);

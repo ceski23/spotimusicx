@@ -1,0 +1,1 @@
+export { SavedAlbumsPage } from './SavedAlbumsPage';

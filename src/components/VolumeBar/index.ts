@@ -1,0 +1,1 @@
+export { VolumeBar } from './VolumeBar';

@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, createSelector } from '@reduxjs/toolkit';
 import { RootState } from 'store';
-import { State, Track } from './types';
+import { State, Track } from 'features/apiTypes';
 
 interface SpotifyState {
   player?: any;
@@ -32,9 +32,6 @@ export const slice = createSlice({
     setDeviceId: (state, { payload }: PayloadAction<string>) => {
       state.deviceId = payload;
     },
-    setTrack: (state, { payload }: PayloadAction<Track>) => {
-      state.track = payload;
-    },
     setTrackColor: (state, { payload }: PayloadAction<string | undefined>) => {
       state.trackColor = payload;
     },
@@ -43,9 +40,13 @@ export const slice = createSlice({
 
 export const {
   setPlayer, setColor, setState, setDeviceId,
-  setTrack, setTrackColor,
+  setTrackColor,
 } = slice.actions;
 
 export default slice.reducer;
 
-export const selectSpotifyState = (state: RootState) => state.spotify;
+const getSpotifyState = (state: RootState) => state.spotify;
+export const selectColor = createSelector(getSpotifyState, (state) => state.color);
+export const selectTrackColor = createSelector(getSpotifyState, (state) => state.trackColor);
+export const selectPlayer = createSelector(getSpotifyState, (state) => state.player);
+export const selectPlaybackState = createSelector(getSpotifyState, (state) => state.state);

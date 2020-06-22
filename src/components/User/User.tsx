@@ -1,5 +1,5 @@
 import React, { FC, ReactElement } from 'react';
-import { User as UserType } from 'features/auth/types';
+import { User as UserType } from 'features/apiTypes';
 import styled from '@emotion/styled';
 
 interface Props {

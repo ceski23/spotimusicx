@@ -1,12 +1,10 @@
 import React, { FC, ReactElement, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import queryString from 'query-string';
-import { setAccessToken, selectAuthData } from 'features/auth/slice';
-import { Redirect } from 'react-router-dom';
+import { setAccessToken } from 'features/auth/slice';
 
 export const AuthCallback: FC = (): ReactElement => {
   const dispatch = useDispatch();
-  const { accessToken } = useSelector(selectAuthData);
 
   useEffect(() => {
     // eslint-disable-next-line no-restricted-globals
@@ -15,5 +13,5 @@ export const AuthCallback: FC = (): ReactElement => {
     if (token) dispatch(setAccessToken(token));
   }, [dispatch]);
 
-  return accessToken ? <Redirect to="/" /> : <></>;
+  return <></>;
 };

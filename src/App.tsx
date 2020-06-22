@@ -4,13 +4,13 @@ import { theme } from 'theme';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import { withRouter } from 'react-router-dom';
-import { useAuthGuard } from 'hooks/useAuthGuard';
+import { useAuthGuard, AuthState } from 'hooks/useAuthGuard';
 import { LoggedInContent } from 'views/LoggedInContent';
 import { renderRoutes } from 'react-router-config';
 import { guestRoutes } from 'routes';
 import { updateAuthHeader } from 'api';
-import { selectAuthData } from 'features/auth/slice';
-import { setColor, selectSpotifyState } from 'features/spotify/slice';
+import { selectAccessToken } from 'features/auth/slice';
+import { setColor, selectColor } from 'features/spotify/slice';
 
 const Container = styled.div`
   display: flex;
@@ -21,15 +21,15 @@ const Container = styled.div`
 `;
 
 export const App = withRouter(({ history }) => {
-  const { color } = useSelector(selectSpotifyState);
-  const { accessToken } = useSelector(selectAuthData);
+  const color = useSelector(selectColor);
+  const accessToken = useSelector(selectAccessToken);
   const dispatch = useDispatch();
 
   useEffect(() => {
     updateAuthHeader(accessToken);
   }, [accessToken]);
 
-  const { loggedIn, loading } = useAuthGuard();
+  const authState = useAuthGuard();
 
   useEffect(() => {
     history.listen(() => {
@@ -40,9 +40,8 @@ export const App = withRouter(({ history }) => {
   return (
     <ThemeProvider theme={theme}>
       <Container color={color}>
-        {!loading && (
-          loggedIn ? <LoggedInContent /> : renderRoutes(guestRoutes)
-        )}
+        {authState === AuthState.AUTHORIZED && <LoggedInContent />}
+        {authState === AuthState.UNAUTHORIZED && renderRoutes(guestRoutes)}
       </Container>
     </ThemeProvider>
   );

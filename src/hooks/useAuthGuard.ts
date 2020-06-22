@@ -2,26 +2,29 @@ import { useSelector } from 'react-redux';
 import { useThunkDispatch } from 'store';
 import { fetchMe } from 'features/auth/api';
 import { useState, useEffect } from 'react';
-import { setUser, selectAuthData } from 'features/auth/slice';
+import { setUser, selectAccessToken } from 'features/auth/slice';
+
+export enum AuthState {
+  AUTHORIZED, UNAUTHORIZED, PENDING
+}
 
 export const useAuthGuard = () => {
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const { accessToken } = useSelector(selectAuthData);
+  const [loggedIn, setLoggedIn] = useState<AuthState>(AuthState.PENDING);
+  const accessToken = useSelector(selectAccessToken);
   const dispatch = useThunkDispatch();
 
   useEffect(() => {
-    setLoading(true);
-    if (accessToken) {
-      setLoggedIn(true);
-      fetchMe()
-        .then((user) => dispatch(setUser(user)))
-        .catch(() => { setLoggedIn(false); });
-    } else {
-      setLoggedIn(false);
-    }
-    setLoading(false);
-  }, [accessToken]);
+    if (accessToken === undefined) setLoggedIn(AuthState.UNAUTHORIZED);
 
-  return { loggedIn, loading };
+    else if (accessToken) {
+      fetchMe()
+        .then((user) => {
+          dispatch(setUser(user));
+          setLoggedIn(AuthState.AUTHORIZED);
+        })
+        .catch(() => { setLoggedIn(AuthState.UNAUTHORIZED); });
+    }
+  }, [accessToken, dispatch]);
+
+  return loggedIn;
 };

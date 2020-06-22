@@ -20,6 +20,7 @@ export const Authorize: FC = (): ReactElement => {
       client_id: 'aae8fb6007ab449190cdd5876f1b9fce',
       response_type: 'token',
       redirect_uri: `${window.location.origin}/authorize`,
+      // redirect_uri: `${window.location.origin}/index.html#/authorize`,
       scope: scopes.join(' '),
     },
   });

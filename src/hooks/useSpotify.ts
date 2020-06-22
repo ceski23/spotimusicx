@@ -1,17 +1,19 @@
+/* eslint-disable no-alert */
 /* eslint-disable camelcase */
 /* eslint-disable @typescript-eslint/camelcase */
 /* eslint-disable import/prefer-default-export */
-import { useEffect, useState } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Vibrant from 'node-vibrant';
 import {
-  selectSpotifyState, setState, setDeviceId, setTrack, setTrackColor, setPlayer,
+  setState, setDeviceId, setTrackColor, setPlayer, selectPlayer, selectPlaybackState,
 } from 'features/spotify/slice';
-import { State } from 'features/spotify/types';
-import { selectAuthData } from 'features/auth/slice';
+import { selectAccessToken } from 'features/auth/slice';
 import { useHistory } from 'react-router-dom';
 import { transferPlayback } from 'features/player/slice';
 import { ROUTE_LOGIN } from 'routes';
+import { State } from 'features/apiTypes';
+import useInterval from '@use-it/interval';
 
 export const waitForSpotifyWebPlaybackSDKToLoad = async () => (
   new Promise((resolve) => {
@@ -25,10 +27,10 @@ export const waitForSpotifyWebPlaybackSDKToLoad = async () => (
 );
 
 export const useSpotify = () => {
-  const { player } = useSelector(selectSpotifyState);
-  const { accessToken } = useSelector(selectAuthData);
+  const player = useSelector(selectPlayer);
+  const accessToken = useSelector(selectAccessToken);
+  const state = useSelector(selectPlaybackState);
   const dispatch = useDispatch();
-  const [timer, setTimer] = useState<NodeJS.Timeout>();
   const history = useHistory();
 
   const setupStateListeners = () => {
@@ -37,14 +39,15 @@ export const useSpotify = () => {
     };
 
     const stateChangedListener = (currentState?: State) => {
-      if (currentState) {
-        dispatch(setState(currentState));
-        dispatch(setTrack(currentState.track_window.current_track));
+      if (currentState && currentState.track_window.current_track) {
+        if (Number.isInteger(currentState.position)) {
+          dispatch(setState(currentState));
 
-        const image = currentState.track_window.current_track.album.images[0].url;
-        Vibrant.from(image).getPalette().then((palette) => {
-          dispatch(setTrackColor(palette.Vibrant?.getHex()));
-        });
+          const image = currentState.track_window.current_track.album.images[0].url;
+          Vibrant.from(image).getPalette().then((palette) => {
+            dispatch(setTrackColor(palette.Vibrant?.getHex()));
+          });
+        }
       }
     };
 
@@ -61,23 +64,7 @@ export const useSpotify = () => {
     };
   };
 
-  const setupStateFetching = (interval: number) => {
-    if (!timer && player) {
-      setTimer(setInterval(() => {
-        if (player) {
-          player.getCurrentState().then((currentState: State) => {
-            dispatch(setState(currentState));
-          });
-        }
-      }, interval));
-    }
-
-    return () => {
-      if (timer) clearInterval(timer);
-    };
-  };
-
-  const setupPlayer = async () => {
+  const setupPlayer = useCallback(async () => {
     try {
       if (!player && accessToken) {
         const sdk: any = await waitForSpotifyWebPlaybackSDKToLoad();
@@ -106,9 +93,16 @@ export const useSpotify = () => {
     } catch (error) {
       history.push(ROUTE_LOGIN);
     }
-  };
+  }, [accessToken, dispatch, history, player]);
 
-  useEffect(setupStateFetching(1000), [player, timer]);
-  useEffect(setupStateListeners, [dispatch, player]);
-  useEffect(() => { setupPlayer(); }, [accessToken, dispatch, history, player, setPlayer]);
+  useEffect(setupStateListeners, [setupStateListeners]);
+  useEffect(() => { setupPlayer(); }, [setupPlayer]);
+
+  useInterval(() => {
+    if (player) {
+      player.getCurrentState().then((currentState: State) => {
+        if (Number.isInteger(currentState.position)) dispatch(setState(currentState));
+      });
+    }
+  }, state?.paused === false ? 1000 : null);
 };

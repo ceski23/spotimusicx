@@ -22,9 +22,13 @@ const Text = styled.h3`
   font-size: 3em;
 `;
 
-export const NotFound: FC = (): ReactElement => (
+interface Props {
+  text?: string;
+}
+
+export const NotFound: FC<Props> = ({ text }): ReactElement => (
   <Container>
     <Title>404</Title>
-    <Text>Nie znaleziono strony</Text>
+    <Text>{text || 'Nie znaleziono strony'}</Text>
   </Container>
 );

@@ -6,11 +6,19 @@ import { persistStore } from 'redux-persist';
 import { ThunkAction } from 'redux-thunk';
 import authReducer from 'features/auth/slice';
 import spotifyReducer from 'features/spotify/slice';
+import libraryReducer from 'features/library/slice';
+import albumsReducer from 'features/albums/slice';
+import artistsReducer from 'features/artists/slice';
+import playerReducer from 'features/player/slice';
 import { useDispatch } from 'react-redux';
 
 export const rootReducer = combineReducers({
   auth: authReducer,
   spotify: spotifyReducer,
+  library: libraryReducer,
+  albums: albumsReducer,
+  artists: artistsReducer,
+  player: playerReducer,
 });
 
 const middleware = getDefaultMiddleware({

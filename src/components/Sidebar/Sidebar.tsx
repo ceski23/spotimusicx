@@ -4,20 +4,21 @@ import { NavLink } from 'react-router-dom';
 import { ReactComponent as HomeIcon } from 'assets/home.svg';
 import { ReactComponent as TracksIcon } from 'assets/show.svg';
 import { ReactComponent as AlbumIcon } from 'assets/disc.svg';
-import { ReactComponent as TopIcon } from 'assets/podium.svg';
 import {
-  ROUTE_TRACKS, ROUTE_ALBUMS, ROUTE_TOP, ROUTE_HOME,
+  ROUTE_SAVED_TRACKS, ROUTE_HOME, ROUTE_SAVED_ALBUMS,
 } from 'routes';
 import { User } from 'components/User';
 import { useSelector } from 'react-redux';
-import { selectAuthData } from 'features/auth/slice';
 import Color from 'color';
+import { slideRight } from 'theme';
+import { selectUser } from 'features/auth/slice';
 
 const Link = styled(NavLink)`
   color: rgba(255, 255, 255, 0.6);
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
   font-size: 1.3em;
   text-decoration: none;
+  font-weight: 500;
 
   &.active {
     color: white;
@@ -50,7 +51,8 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   padding-top: 50px;
-  padding-bottom: 100px;
+  margin-bottom: 100px;
+  animation: ${slideRight} 0.3s ease;
 `;
 
 const AccountLink = styled.a`
@@ -66,13 +68,13 @@ const items = [
   {
     to: ROUTE_HOME, text: 'Przegląd', Icon: HomeIcon, exact: true,
   },
-  { to: ROUTE_TRACKS, text: 'Utwory', Icon: TracksIcon },
-  { to: ROUTE_ALBUMS, text: 'Albumy', Icon: AlbumIcon },
-  { to: ROUTE_TOP, text: 'Twoje top', Icon: TopIcon },
+  { to: ROUTE_SAVED_TRACKS, text: 'Utwory', Icon: TracksIcon },
+  { to: ROUTE_SAVED_ALBUMS, text: 'Albumy', Icon: AlbumIcon },
+  // { to: ROUTE_TOP, text: 'Twoje top', Icon: TopIcon },
 ];
 
 export const Sidebar: FC = (): ReactElement => {
-  const { user } = useSelector(selectAuthData);
+  const user = useSelector(selectUser);
 
   return (
     <Container>

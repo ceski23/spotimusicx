@@ -3,7 +3,8 @@
   "extends": [
     "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended",
-    "airbnb"
+    "airbnb",
+    "airbnb/hooks"
   ],
   "rules": {
     "@typescript-eslint/explicit-function-return-type": "off",

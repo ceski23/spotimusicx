@@ -1,4 +1,5 @@
 import axios, { AxiosError } from 'axios';
+import { PaginatedSuccess } from 'features/pagination';
 
 // TODO: Change that
 export interface ApiError<T> {
@@ -7,6 +8,35 @@ export interface ApiError<T> {
   data: {
     [K in keyof T]: string;
   } | string;
+}
+
+export interface PaginatedResponse<T> {
+  href: string;
+  items: T[];
+  limit: number;
+  next?: string;
+  offset: number;
+  previous?: string;
+  total: number;
+}
+
+export interface CursorResponse<T> {
+  href: string;
+  items: T[];
+  next?: string;
+  cursors: Cursors;
+  previous?: string;
+  total: number;
+}
+
+export interface Cursors {
+  after?: number;
+  before?: number;
+}
+
+export interface PaginationParams {
+  offset?: number;
+  limit?: number;
 }
 
 export const client = axios.create({
@@ -41,3 +71,16 @@ export function handleApiError<T>(error: object): ApiError<T> {
   if (err.response) return err.response.data;
   throw err;
 }
+
+export const mapResponse = <T extends object>(
+  response: PaginatedResponse<T>,
+): PaginatedSuccess<T> => {
+  const {
+    items, total, offset,
+  } = response;
+  return {
+    items,
+    totalItems: total,
+    fetchedOffset: offset,
+  };
+};
