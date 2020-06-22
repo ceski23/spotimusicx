@@ -62,7 +62,6 @@ export const createPaginatedReducer = <T extends object>({ limit, types }: Pagin
   })
 );
 
-
 export const createPaginatedThunk = <R, S = any>(
   type: string,
   payloadCreator: AsyncThunkPayloadCreator<PaginatedSuccess<R>, number, ThunkApi<S>>,
